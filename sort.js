@@ -40,6 +40,19 @@ var sortTest = (function() {
 
             return array;
         },
+        insertion: function(array) {
+            for (var i = 1; i < array.length; i++) {
+                var x = array[i];
+
+                for (var j = i; j > 0 && compare(array[j - 1], x) > 0; j--) {
+                    array[j] = array[j - 1];
+                }
+
+                array[j] = x;
+            }
+
+            return array;
+        },
         selection: function(array) {
             for (var i = 0; i < array.length; i++) {
                 var minIndex = i,

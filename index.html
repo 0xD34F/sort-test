@@ -32,9 +32,7 @@ var tests = {
     }
 };
 
-var chartSwaps = null,
-    chartCompares = null,
-    testResults = {};
+var testResults = {};
 
 function addResult(data) {
     testResults[data.sort] = testResults[data.sort] || [];
@@ -84,9 +82,8 @@ window.onload = function() {
     }
 
     sortTest.postMessage({
-        sort: [ 'bubble', 'selection', 'quick' ],
+        sort: [ 'bubble', 'selection', 'insertion', 'quick' ],
         elements: [ 100, 500, 1000, 2000, 5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000 ],
-        //elements: [ 100000, 200000, 500000, 1000000, 2000000 ],
         fill: 'random'
     });
 };
