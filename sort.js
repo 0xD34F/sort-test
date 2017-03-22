@@ -30,7 +30,7 @@ var sortTest = (function() {
 
     var sorts = {
         bubble: function(array) {
-            for (var i = 0; i < array.length; i++) {
+            for (var i = 1; i < array.length; i++) {
                 for (var j = i; j > 0; j--) {
                     if (compare(array[j], array[j - 1]) < 0) {
                         swap(array, j, j - 1);
@@ -79,7 +79,7 @@ var sortTest = (function() {
             return array;
         },
         selection: function(array) {
-            for (var i = 0; i < array.length; i++) {
+            for (var i = 0; i < array.length - 1; i++) {
                 var minIndex = i,
                     minValue = array[i];
 

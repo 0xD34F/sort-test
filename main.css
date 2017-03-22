@@ -58,6 +58,8 @@ table {
 }
 
 .graph {
+    display: inline-block;
+    min-width: 400px;
     width: 100%;
     height: 300px;
 }
