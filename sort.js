@@ -54,16 +54,15 @@ var sortTest = (function() {
                     sorted = true;
                 }
 
-                var i = 0;
-                while (i + gap < array.length) {
+                for (var i = 0; i < array.length - gap; i++) {
                     if (compare(array[i], array[i + gap]) > 0) {
                         swap(array, i, i + gap);
                         sorted = false;
                     }
-
-                    i++;
                 }
             }
+
+            return array;
         },
         insertion: function(array) {
             for (var i = 1; i < array.length; i++) {
@@ -97,6 +96,45 @@ var sortTest = (function() {
 
             return array;
         },
+        heap: (function() {
+            function heapify(array, index, size) {
+                var left = 2 * index + 1,
+                    right = 2 * index + 2,
+                    largest = index;
+
+                if (left < size && compare(array[left], array[index]) > 0) {
+                    largest = left;
+                }
+
+                if (right < size && compare(array[right], array[largest]) > 0) {
+                    largest = right;
+                }
+
+                if (largest !== index) {
+                    swap(array, index, largest);
+                    heapify(array, largest, size);
+                }
+            }
+
+            function buildMaxHeap(array) {
+                for (var i = Math.floor(array.length / 2); i >= 0; i--) {
+                    heapify(array, i, array.length);
+                }
+            }
+
+            return function(array) {
+                var size = array.length;
+                buildMaxHeap(array);
+
+                for (var i = array.length - 1; i > 0; i--) {
+                    swap(array, 0, i);
+                    size--;
+                    heapify(array, 0, size);
+                }
+
+                return array;
+            }
+        })(),
         quick: (function() {
             function partition(array, left, right) {
                 var x = array[right],
@@ -140,6 +178,8 @@ var sortTest = (function() {
                         stack[++top] = right;
                     }
                 }
+
+                return array;
             }
         })()
     };
