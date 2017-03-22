@@ -17,6 +17,21 @@ sortTest.addEventListener('message', function(e) {
     addResult(e.data);
 });
 
+var sorts = {
+    bubble: {
+        color: '#0f5ac6'
+    },
+    selection: {
+        color: '#e3d844'
+    },
+    insertion: {
+        color: '#8c2ee0'
+    },
+    quick: {
+        color: '#91bcd5'
+    }
+};
+
 var tests = {
     compares: {
         chartID: 'sortTestResultsCompares',
@@ -51,7 +66,8 @@ function addResult(data) {
                         x: n.elements,
                         y: n[t]
                     };
-                })
+                }),
+                color: sorts[i].color
             });
         }
     }
@@ -82,7 +98,7 @@ window.onload = function() {
     }
 
     sortTest.postMessage({
-        sort: [ 'bubble', 'selection', 'insertion', 'quick' ],
+        sort: Object.keys(sorts),
         elements: [ 100, 500, 1000, 2000, 5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000 ],
         fill: 'random'
     });
