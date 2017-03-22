@@ -40,6 +40,31 @@ var sortTest = (function() {
 
             return array;
         },
+        comb: function(array) {
+            var gap = array.length,
+                shrink = 1.3,
+                sorted = false;
+
+            while (!sorted) {
+                gap = Math.floor(gap / shrink);
+                if (gap > 1) {
+                    sorted = false;
+                } else {
+                    gap = 1;
+                    sorted = true;
+                }
+
+                var i = 0;
+                while (i + gap < array.length) {
+                    if (compare(array[i], array[i + gap]) > 0) {
+                        swap(array, i, i + gap);
+                        sorted = false;
+                    }
+
+                    i++;
+                }
+            }
+        },
         insertion: function(array) {
             for (var i = 1; i < array.length; i++) {
                 var x = array[i];
