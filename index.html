@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="nvd3/nv.d3.min.css">
+
+    <script src="d3/d3.min.js"></script>
+    <script src="nvd3/nv.d3.min.js"></script>
+    <script src="sort.js"></script>
+
+    <script>
+//var sortTest = new Worker('sort.js');
+var sortTest = new Worker(URL.createObjectURL(new Blob(["("+sort_test_function.toString()+")()"], {type: 'text/javascript'})));
+
+sortTest.addEventListener('message', function(e) {
+    console.log(e);
+    addResult(e.data);
+});
+
+var tests = {
+    compares: {
+        chartID: 'sortTestResultsCompares',
+        yAxisLabel: 'Number of compares'
+    },
+    swaps: {
+        chartID: 'sortTestResultsSwaps',
+        yAxisLabel: 'Number of swaps'
+    },
+    time: {
+        chartID: 'sortTestResultsTime',
+        yAxisLabel: 'Milliseconds'
+    }
+};
+
+var chartSwaps = null,
+    chartCompares = null,
+    testResults = {};
+
+function addResult(data) {
+    testResults[data.sort] = testResults[data.sort] || [];
+    testResults[data.sort].push(data);
+
+    for (var t in tests) {
+        tests[t].chartData = [];
+    }
+
+    for (var i in testResults) {
+        for (t in tests) {
+            tests[t].chartData.push({
+                key: i,
+                values: testResults[i].map(function(n) {
+                    return {
+                        x: n.elements,
+                        y: n[t]
+                    };
+                })
+            });
+        }
+    }
+
+    for (var t in tests) {
+        d3.select('#' + tests[t].chartID + ' svg')
+            .datum(tests[t].chartData)
+            .call(tests[t].chart);
+    }
+}
+
+window.onload = function() {
+    var charts = document.getElementById('charts');
+
+    for (var t in tests) {
+        charts.innerHTML += '<div class="graph" id="' + tests[t].chartID + '"><svg></svg></div>';
+
+        var c = tests[t].chart = nv.models.lineChart().margin({ left: 150 });
+
+        c.xAxis
+            .axisLabel('Number of elements')
+            .tickFormat(d3.format(',r'));
+
+        c.yAxis
+            .axisLabel(tests[t].yAxisLabel)
+            .axisLabelDistance(50)
+            .tickFormat(d3.format(',r'));
+    }
+
+    sortTest.postMessage({
+        sort: [ 'bubble', 'selection', 'quick' ],
+        elements: [ 100, 500, 1000, 2000, 5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000 ],
+        //elements: [ 100000, 200000, 500000, 1000000, 2000000 ],
+        fill: 'random'
+    });
+};
+    </script>
+</head>
+<body>
+    <header>
+        <div class="content">
+        </div>
+    </header>
+    <main>
+        <div class="content">
+            <div id="charts"></div>
+        </div>
+    </main>
+</body>
+</html>
