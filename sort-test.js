@@ -87,7 +87,7 @@
                 yAxisLabel: 'Number of swaps'
             },
             time: {
-                title: 'Time',
+                title: 'Run time',
                 chartID: 'sortTestResultsTime',
                 yAxisLabel: 'Milliseconds'
             }
