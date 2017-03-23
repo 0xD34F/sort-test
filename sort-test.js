@@ -92,6 +92,13 @@
                 yAxisLabel: 'Milliseconds'
             }
         },
+        testArraysSizes: '[ 1000, 2000, 5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000 ]',
+        testArraysFill:
+'function(array) {\n\
+    for (var i = 0; i < array.length; i++) {\n\
+        array[i] = random(array.length);\n\
+    }\n\
+}',
         rawResults: [],
         initCharts: function(chartsContainerID) {
             var charts = document.getElementById(chartsContainerID);
@@ -156,9 +163,29 @@ window.onload = function() {
     document.getElementById('runTest').onclick = function() {
         sortTest.run({
             sort: Object.keys(sortTest.sorts),
-            elements: [ 100, 500, 1000, 2000, 28000, 5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000 ],
-            fill: document.getElementById('testData').value
+            elements: sortTest.testArraysSizes,
+            fill: sortTest.testArraysFill
         });
+    };
+
+    var openEditor = function(e) {
+        var propName = sortTest.editing = e.target.getAttribute('propName');
+
+        document.getElementById('testArraysEditor').value = sortTest[propName];
+        document.getElementsByClassName('source')[0].classList.remove('hidden');
+        document.getElementsByClassName('overlay')[0].classList.remove('hidden');
+    };
+    document.getElementById('testArraysSizes').onclick = openEditor;
+    document.getElementById('testArraysFill').onclick = openEditor;
+
+    var closeEditor = function() {
+        document.getElementsByClassName('source')[0].classList.add('hidden');
+        document.getElementsByClassName('overlay')[0].classList.add('hidden');
+    };
+    document.getElementById('BCancel').onclick = closeEditor;
+    document.getElementById('BOK').onclick = function() {
+        sortTest[sortTest.editing] = document.getElementById('testArraysEditor').value;
+        closeEditor();
     };
 
     document.addEventListener('sort-test-started', function() {

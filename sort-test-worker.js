@@ -1,12 +1,12 @@
 ﻿function sort_test_function() {
 
+function random(max, min) {
+    min = min || 0;
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
 var sortTest = (function() {
     var stats = {};
-
-    function random(max, min) {
-        min = min || 0;
-        return Math.floor(Math.random() * (max - min)) + min;
-    }
 
     function resetStats() {
         stats.comparisons = 0;
@@ -237,8 +237,16 @@ var sortTest = (function() {
 self.addEventListener('message', function(e) {
     var testParams = e.data.params;
 
-    for (var i = 0; i < testParams.elements.length; i++) {
-        var array = sortTest.generateArray[testParams.fill](testParams.elements[i]);
+    var elements = eval('(' + testParams.elements + ')');
+    if (elements instanceof Function) {
+        elements = elements();
+    }
+
+    var fill = eval('(' + testParams.fill + ')');
+
+    for (var i = 0; i < elements.length; i++) {
+        var array = new Array(elements[i]);
+        fill(array);
 
         for (var j = 0; j < testParams.sort.length; j++) {
             var testResult = sortTest.run(testParams.sort[j], array);

@@ -13,15 +13,17 @@
     <div class="content">
         <div class="title">Sorting algorithms test</div>
         <div id="menu">
-            <button class="control-element" id="runTest">Run test</button>
-            <label for="testData">Test data:</label>
-            <select class="control-element" id="testData">
-                <option value="random">Random</option>
-                <option value="sorted">Sorted</option>
-                <option value="sortedReverse">Reverse sorted</option>
-            </select>
+            <button class="button" id="runTest">Run test</button>
+            <button class="button" id="testArraysSizes" propName="testArraysSizes">Test arrays sizes...</button>
+            <button class="button" id="testArraysFill" propName="testArraysFill">Test arrays fill...</button>
         </div>
         <div id="charts"></div>
+    </div>
+    <div class="overlay hidden"></div>
+    <div class="source hidden">
+        <textarea id="testArraysEditor"></textarea>
+        <button class="button" id="BCancel">Cancel</button>
+        <button class="button" id="BOK">OK</button>
     </div>
 </body>
 </html>
