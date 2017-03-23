@@ -58,7 +58,7 @@ table {
 }
 
 #menu {
-    padding: 20px;
+    padding: 30px 10px 10px 10px;
 }
 
 #runTest {
@@ -70,8 +70,19 @@ table {
     margin: 3px;
 }
 
-.graph {
-    display: inline-block;
+.chart-wrapper {
+    padding: 15px 5px;
+    margin: 20px 0;
+    border: 1px solid #DDD;
+}
+
+.chart-title {
+    position: relative;
+    left: 5px;
+    top: -5px;
+}
+
+.chart {
     min-width: 400px;
     width: 100%;
     height: 400px;

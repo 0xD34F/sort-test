@@ -1,20 +1,26 @@
 ﻿var sortTest = (function() {
-    var lock = false;
+    var currentTest = null;
 
     //var worker = new Worker('sort-test-worker.js');
     var worker = new Worker(URL.createObjectURL(new Blob(["("+sort_test_function.toString()+")()"], {type: 'text/javascript'})));
 
     worker.addEventListener('message', function(e) {
-        console.log(e);
+        // игнорируются результаты всех тестов, кроме текущего
+        if (currentTest !== e.data.id) {
+            return;
+        }
+
         if (e.data.results) {
             addResult(e.data.results);
         } else {
-            lock = false;
+            currentTest = null;
             document.dispatchEvent(new CustomEvent('sort-test-ended', {}));
         }
     });
 
     function resetResultArrays() {
+        sortTest.rawResults = [];
+
         for (t in sortTest.tests) {
             for (var i = 0; i < sortTest.tests[t].chartData.length; i++) {
                 sortTest.tests[t].chartData[i].values = [];
@@ -25,10 +31,17 @@
     }
 
     function addResult(data) {
+        sortTest.rawResults.push(data);
+
         for (var t in sortTest.tests) {
-            sortTest.tests[t].chartData[sortTest.sorts[data.sort].seriesNum].values.push({
+            var values = sortTest.tests[t].chartData[sortTest.sorts[data.sort].seriesNum].values;
+            values.push({
                 x: data.elements,
                 y: data[t]
+            });
+            // на тот случай, если данные придут не в том порядке
+            values.sort(function(a, b) {
+                return a.x - b.x;
             });
         }
 
@@ -63,33 +76,39 @@
             }
         },
         tests: {
-            compares: {
+            comparisons: {
+                title: 'Comparisons',
                 chartID: 'sortTestResultsCompares',
-                yAxisLabel: 'Number of compares'
+                yAxisLabel: 'Number of comparisons'
             },
             swaps: {
+                title: 'Swaps',
                 chartID: 'sortTestResultsSwaps',
                 yAxisLabel: 'Number of swaps'
             },
             time: {
+                title: 'Time',
                 chartID: 'sortTestResultsTime',
                 yAxisLabel: 'Milliseconds'
             }
         },
+        rawResults: [],
         initCharts: function(chartsContainerID) {
             var charts = document.getElementById(chartsContainerID);
 
             for (var t in sortTest.tests) {
-                charts.innerHTML += '<div class="graph" id="' + sortTest.tests[t].chartID + '"><svg></svg></div>';
+                var test = sortTest.tests[t];
 
-                var c = sortTest.tests[t].chart = nv.models.lineChart().margin({ left: 150 });
+                charts.innerHTML += '<div class="chart-wrapper"><span class="chart-title">' + test.title + '</span><div class="chart" id="' + test.chartID + '"><svg></svg></div></div>';
+
+                var c = test.chart = nv.models.lineChart().margin({ left: 150 });
 
                 c.xAxis
                     .axisLabel('Number of elements')
                     .tickFormat(d3.format(',r'));
 
                 c.yAxis
-                    .axisLabel(sortTest.tests[t].yAxisLabel)
+                    .axisLabel(test.yAxisLabel)
                     .axisLabelDistance(50)
                     .tickFormat(d3.format(',r'));
             }
@@ -115,12 +134,12 @@
             }
         },
         run: function(testParams) {
-            if (!lock) {
-                lock = true;
+            if (!currentTest) {
+                currentTest = +new Date();
                 resetResultArrays();
 
                 var test = {
-                    id: +new Date(),
+                    id: currentTest,
                     params: testParams
                 };
 
@@ -137,7 +156,7 @@ window.onload = function() {
     document.getElementById('runTest').onclick = function() {
         sortTest.run({
             sort: Object.keys(sortTest.sorts),
-            elements: [ 100, 500, 1000, 2000, 5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000 ],
+            elements: [ 100, 500, 1000, 2000, 28000, 5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000 ],
             fill: document.getElementById('testData').value
         });
     };

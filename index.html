@@ -10,24 +10,17 @@
     <script src="sort-test.js"></script>
 </head>
 <body>
-    <header>
-        <div class="content">
+    <div class="content">
+        <div id="menu">
+            <button class="control-element" id="runTest">Run test</button>
+            <label for="testData">Test data:</label>
+            <select class="control-element" id="testData">
+                <option value="random">Random</option>
+                <option value="sorted">Sorted</option>
+                <option value="sortedReverse">Reverse sorted</option>
+            </select>
         </div>
-    </header>
-    <main>
-        <div class="content">
-            <div id="menu">
-                <button class="control-element" id="runTest">Run test</button>
-
-                <label for="testData">Test data:</label>
-                <select class="control-element" id="testData">
-                    <option value="random">Random</option>
-                    <option value="sorted">Sorted</option>
-                    <option value="sortedReverse">Reverse sorted</option>
-                </select>
-            </div>
-            <div id="charts"></div>
-        </div>
-    </main>
+        <div id="charts"></div>
+    </div>
 </body>
 </html>

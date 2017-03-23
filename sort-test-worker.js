@@ -9,13 +9,13 @@ var sortTest = (function() {
     }
 
     function resetStats() {
-        stats.compares = 0;
+        stats.comparisons = 0;
         stats.swaps = 0;
         stats.startTime = new Date();
     }
 
     function compare(a, b) {
-        stats.compares++;
+        stats.comparisons++;
 
         return a - b;
     }
@@ -224,8 +224,8 @@ var sortTest = (function() {
 
             return {
                 sort: sort,
-                elements: arrayCopy.length,
-                compares: stats.compares,
+                elements: array.length,
+                comparisons: stats.comparisons,
                 swaps: stats.swaps,
                 time: new Date() - stats.startTime
             };
