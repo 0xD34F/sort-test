@@ -235,7 +235,7 @@ var sortTest = (function() {
 
 
 self.addEventListener('message', function(e) {
-    var testParams = e.data;
+    var testParams = e.data.params;
 
     for (var i = 0; i < testParams.elements.length; i++) {
         var array = sortTest.generateArray[testParams.fill](testParams.elements[i]);
@@ -243,9 +243,17 @@ self.addEventListener('message', function(e) {
         for (var j = 0; j < testParams.sort.length; j++) {
             var testResult = sortTest.run(testParams.sort[j], array);
             testResult.fill = testParams.fill;
-            self.postMessage(testResult);
+            self.postMessage({
+                id: e.data.id,
+                results: testResult
+            });
         }
     }
+
+    self.postMessage({
+        id: e.data.id,
+        results: null
+    });
 });
 
 } // sort_test_function

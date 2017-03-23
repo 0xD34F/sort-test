@@ -57,6 +57,19 @@ table {
     }
 }
 
+#menu {
+    padding: 20px;
+}
+
+#runTest {
+    margin-right: 20px;
+}
+
+.control-element {
+    padding: 3px;
+    margin: 3px;
+}
+
 .graph {
     display: inline-block;
     min-width: 400px;
