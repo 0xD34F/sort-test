@@ -107,6 +107,7 @@ table {
     box-sizing: border-box;
     resize: none;
     border: none;
+    font-family: monospace;
 }
 .source > button {
     float: right;

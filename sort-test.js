@@ -167,6 +167,51 @@
     }
 })();
 
+function getCursorPos(input) {
+    if ('selectionStart' in input && document.activeElement == input) {
+        return {
+            start: input.selectionStart,
+            end: input.selectionEnd
+        };
+    } else if (input.createTextRange) {
+        var sel = document.selection.createRange();
+        if (sel.parentElement() === input) {
+            var range = input.createTextRange();
+            range.moveToBookmark(sel.getBookmark());
+            for (var len = 0; range.compareEndPoints('EndToStart', range) > 0; range.moveEnd('character', -1)) {
+                len++;
+            }
+            range.setEndPoint('StartToStart', input.createTextRange());
+            for (var pos = { start: 0, end: len }; range.compareEndPoints('EndToStart', range) > 0; range.moveEnd('character', -1)) {
+                pos.start++;
+                pos.end++;
+            }
+            return pos;
+        }
+    }
+
+    return -1;
+}
+
+function setCursorPos(input, start, end) {
+    if (arguments.length < 3) {
+        end = start;
+    }
+
+    if ('selectionStart' in input) {
+        setTimeout(function() {
+            input.selectionStart = start;
+            input.selectionEnd = end;
+        }, 1);
+    } else if (input.createTextRange) {
+        var range = input.createTextRange();
+        range.moveStart('character', start);
+        range.collapse();
+        range.moveEnd('character', end - start);
+        range.select();
+    }
+}
+
 window.onload = function() {
     sortTest.initCharts('charts');
 
@@ -198,6 +243,17 @@ window.onload = function() {
         closeEditor();
     };
     document.getElementsByClassName('overlay')[0].onclick = closeEditor;
+
+    document.getElementById('testArraysEditor').onkeydown = function(e) {
+        if (e.keyCode == 9) {
+            e.preventDefault();
+
+            var tab = '    ';
+            var cursorPos = getCursorPos(e.target);
+            e.target.value = e.target.value.slice(0, cursorPos.start) + tab + e.target.value.slice(cursorPos.end);
+            setCursorPos(e.target, cursorPos.start + tab.length);
+        }
+    };
 
     document.addEventListener('sort-test-started', function() {
         document.getElementById('runTest').setAttribute('disabled', 'disabled');
