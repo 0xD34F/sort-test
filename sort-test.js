@@ -5,7 +5,6 @@
     var worker = new Worker(URL.createObjectURL(new Blob(["("+sort_test_function.toString()+")()"], {type: 'text/javascript'})));
 
     worker.addEventListener('message', function(e) {
-        console.log(e);
         // игнорируются результаты всех тестов, кроме текущего
         if (currentTest !== e.data.id) {
             return;
@@ -19,7 +18,7 @@
         } else if (e.data.error) {
             var errors = document.getElementById('errors');
             errors.classList.remove('hidden');
-            errors.innerHTML += '<br>' + e.data.error;
+            errors.innerHTML += (errors.innerHTML ? '<br>' : '') + e.data.error;
         }
     });
 
