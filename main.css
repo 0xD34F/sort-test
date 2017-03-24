@@ -46,7 +46,7 @@ table {
 
 /*--------------------------------------------------------------------------*/
 
-* {
+html {
     font-family: sans-serif;
 }
 
@@ -58,16 +58,10 @@ table {
 .content > .title {
     font-size: 32px;
     padding: 30px 0 0 10px;
-    font-family: sans-serif;
 }
 
 #menu {
-    font-family: sans-serif;
     padding: 30px 10px 10px 10px;
-}
-
-#runTest {
-    margin-right: 20px;
 }
 
 #errors {
@@ -130,7 +124,6 @@ table {
 }
 
 .chart-title {
-    font-family: sans-serif;
     position: relative;
     left: 5px;
     top: -5px;
