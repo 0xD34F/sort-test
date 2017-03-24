@@ -52,19 +52,13 @@ table {
 
 .content {
     margin: 0 auto;
-    width: 100%;
+    width: 960px;
 }
 
 .content > .title {
     font-size: 32px;
     padding: 30px 0 0 10px;
     font-family: sans-serif;
-}
-
-@media (min-width: 960px) {
-    .content {
-        width: 960px;
-    }
 }
 
 #menu {
@@ -74,6 +68,10 @@ table {
 
 #runTest {
     margin-right: 20px;
+}
+
+#charts {
+    margin-top: 20px;
 }
 
 .button {
@@ -121,8 +119,8 @@ table {
 
 .chart-wrapper {
     padding: 15px 5px;
-    margin: 20px 0;
     border: 1px solid #DDD;
+    margin-bottom: 20px;
 }
 
 .chart-title {
@@ -136,4 +134,15 @@ table {
     min-width: 400px;
     width: 100%;
     height: 400px;
+}
+
+@media (max-width: 1000px) {
+    .content {
+        width: 100%;
+    }
+    .chart-wrapper {
+        margin-bottom: -1px;
+        border-left: 0;
+        border-right: 0;
+    }
 }
