@@ -184,52 +184,18 @@ var sortTest = (function() {
         })()
     };
 
-    return {
-        generateArray: {
-            random: function(size) {
-                size = size || 100000;
-                var array = new Array(size);
+    return function(sort, array) {
+        var arrayCopy = array.slice(0);
+        resetStats();
+        sorts[sort](arrayCopy);
 
-                for (var i = 0; i < size; i++) {
-                    array[i] = random(size);
-                }
-
-                return array;
-            },
-            sorted: function(size) {
-                size = size || 100000;
-                var array = new Array(size);
-
-                for (var i = 0; i < size; i++) {
-                    array[i] = i;
-                }
-
-                return array;
-            },
-            sortedReverse: function(size) {
-                size = size || 100000;
-                var array = new Array(size);
-
-                for (var i = 0; i < size; i++) {
-                    array[i] = size - i;
-                }
-
-                return array;
-            }
-        },
-        run: function(sort, array) {
-            var arrayCopy = array.slice(0);
-            resetStats();
-            sorts[sort](arrayCopy);
-
-            return {
-                sort: sort,
-                elements: array.length,
-                comparisons: stats.comparisons,
-                swaps: stats.swaps,
-                time: new Date() - stats.startTime
-            };
-        }
+        return {
+            sort: sort,
+            elements: array.length,
+            comparisons: stats.comparisons,
+            swaps: stats.swaps,
+            time: new Date() - stats.startTime
+        };
     };
 })();
 
@@ -286,7 +252,7 @@ self.addEventListener('message', function(e) {
                 fill(array);
 
                 for (var j = 0; j < testParams.sort.length; j++) {
-                    var testResult = sortTest.run(testParams.sort[j], array);
+                    var testResult = sortTest(testParams.sort[j], array);
                     testResult.fill = testParams.fill;
                     post.result(testResult);
                 }
