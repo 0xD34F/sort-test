@@ -70,6 +70,12 @@ table {
     margin-right: 20px;
 }
 
+#errors {
+    padding: 10px 15px;
+    margin-bottom: 20px;
+    color: red;
+};
+
 #charts {
     margin-top: 20px;
 }

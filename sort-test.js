@@ -5,6 +5,7 @@
     var worker = new Worker(URL.createObjectURL(new Blob(["("+sort_test_function.toString()+")()"], {type: 'text/javascript'})));
 
     worker.addEventListener('message', function(e) {
+        console.log(e);
         // игнорируются результаты всех тестов, кроме текущего
         if (currentTest !== e.data.id) {
             return;
@@ -12,9 +13,13 @@
 
         if (e.data.results) {
             addResult(e.data.results);
-        } else {
-            currentTest = null;
+        } else if (e.data.results === null) {
             document.dispatchEvent(new CustomEvent('sort-test-ended', {}));
+            currentTest = null;
+        } else if (e.data.error) {
+            var errors = document.getElementById('errors');
+            errors.classList.remove('hidden');
+            errors.innerHTML += '<br>' + e.data.error;
         }
     });
 
@@ -256,6 +261,10 @@ window.onload = function() {
     };
 
     document.addEventListener('sort-test-started', function() {
+        var errors = document.getElementById('errors');
+        errors.classList.add('hidden');
+        errors.innerHTML = '';
+
         document.getElementById('runTest').setAttribute('disabled', 'disabled');
     });
 

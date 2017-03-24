@@ -234,34 +234,69 @@ var sortTest = (function() {
 })();
 
 
+var post = {
+    testID: null,
+    result: function(data) {
+        self.postMessage({
+            id: post.testID,
+            results: data
+        });
+    },
+    error: function(data) {
+        self.postMessage({
+            id: post.testID,
+            error: data
+        });
+    }
+}
+
+
 self.addEventListener('message', function(e) {
+    post.testID = e.data.id;
+
     var testParams = e.data.params;
 
-    var elements = eval('(' + testParams.elements + ')');
-    if (elements instanceof Function) {
-        elements = elements();
+    var elements = null;
+    try {
+        elements = eval('(' + testParams.elements + ')');
+        if (elements instanceof Function) {
+            elements = elements();
+        }
+        if (!(elements instanceof Array)) {
+            throw 'not an array';
+        }
+    } catch (exception) {
+        post.error('Arrays sizes: ' + (exception.message || exception));
     }
 
-    var fill = eval('(' + testParams.fill + ')');
+    var fill = null;
+    try {
+        fill = eval('(' + testParams.fill + ')');
+        if (!(fill instanceof Function)) {
+            throw 'not a function';
+        }
+    } catch (exception) {
+        post.error('Arrays fill: ' + (exception.message || exception));
+    }
 
-    for (var i = 0; i < elements.length; i++) {
-        var array = new Array(elements[i]);
-        fill(array);
+    if (elements instanceof Array && fill instanceof Function) {
+        try {
+            for (var i = 0; i < elements.length; i++) {
+                var array = new Array(elements[i]);
+                fill(array);
 
-        for (var j = 0; j < testParams.sort.length; j++) {
-            var testResult = sortTest.run(testParams.sort[j], array);
-            testResult.fill = testParams.fill;
-            self.postMessage({
-                id: e.data.id,
-                results: testResult
-            });
+                for (var j = 0; j < testParams.sort.length; j++) {
+                    var testResult = sortTest.run(testParams.sort[j], array);
+                    testResult.fill = testParams.fill;
+                    post.result(testResult);
+                }
+            }
+        } catch (exception) {
+            post.error('Test execution: ' + exception.message);
         }
     }
 
-    self.postMessage({
-        id: e.data.id,
-        results: null
-    });
+    post.result(null);
 });
 
 } // sort_test_function
