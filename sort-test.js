@@ -79,17 +79,17 @@
             comparisons: {
                 title: 'Comparisons',
                 chartID: 'sortTestResultsCompares',
-                yAxisLabel: 'Number of comparisons'
+                unit: 'Comparisons'
             },
             swaps: {
                 title: 'Swaps',
                 chartID: 'sortTestResultsSwaps',
-                yAxisLabel: 'Number of swaps'
+                unit: 'Swaps'
             },
             time: {
                 title: 'Run time',
                 chartID: 'sortTestResultsTime',
-                yAxisLabel: 'Milliseconds'
+                unit: 'Milliseconds'
             }
         },
         testArraysSizes: '[ 1000, 2000, 5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000 ]',
@@ -110,12 +110,22 @@
 
                 var c = test.chart = nv.models.lineChart().margin({ left: 150 });
 
+                c.tooltip.headerFormatter(function(d) {
+                    return d + ' elements';
+                });
+
+                c.tooltip.valueFormatter((function(k) {
+                    return function(d) {
+                        return d + ' ' + k;
+                    };
+                })(test.unit.toLowerCase()));
+
                 c.xAxis
                     .axisLabel('Number of elements')
                     .tickFormat(d3.format(',r'));
 
                 c.yAxis
-                    .axisLabel(test.yAxisLabel)
+                    .axisLabel(test.unit)
                     .axisLabelDistance(50)
                     .tickFormat(d3.format(',r'));
             }
@@ -187,6 +197,7 @@ window.onload = function() {
         sortTest[sortTest.editing] = document.getElementById('testArraysEditor').value;
         closeEditor();
     };
+    document.getElementsByClassName('overlay')[0].onclick = closeEditor;
 
     document.addEventListener('sort-test-started', function() {
         document.getElementById('runTest').setAttribute('disabled', 'disabled');
