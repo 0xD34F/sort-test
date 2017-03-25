@@ -1,6 +1,7 @@
 ## Comparison of sorting algorithms
 
 Algorithms available for testing:
+
 | Algorithm        | Complexity (best)    | Complexity (worst)    |
 |------------------|----------------------|-----------------------|
 | bubble           | O(N)                 | O(N^2)                |
