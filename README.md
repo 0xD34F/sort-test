@@ -1,4 +1,4 @@
-## Comparison of sorting algorithms
+# Comparison of sorting algorithms
 
 Algorithms available for testing:
 
@@ -16,7 +16,7 @@ Characteristics of algorithms available to comparison:
 * Number of swaps
 * Run time
 
-### Test arrays sizes definition
+## Test arrays sizes definition
 
 You can determine the sizes of the test arrays directly:
 ```
@@ -33,7 +33,7 @@ function() {
 }
 ```
 
-### Test arrays fill
+## Test arrays fill
 
 It is necessary to define a function that takes as an argument an array to fill. For example:
 ```
@@ -44,6 +44,6 @@ function(array) {
 }
 ```
 
-### [Demo](https://0xd34f.github.io/sort-test/)
+## [Demo](https://0xd34f.github.io/sort-test/)
 
 [![Sort test](https://raw.githubusercontent.com/0xD34F/sort-test/master/sort-test-screenshot.png)](https://0xd34f.github.io/sort-test/)
