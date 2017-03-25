@@ -1,7 +1,7 @@
 ﻿var sortTest = (function() {
     var currentTest = null;
 
-    var worker = new Worker(URL.createObjectURL(new Blob(["("+sort_test_function.toString()+")()"], {type: 'text/javascript'})));
+    var worker = new Worker('sort-test-worker.js');
 
     worker.addEventListener('message', function(e) {
         // игнорируются результаты всех тестов, кроме текущего
@@ -158,7 +158,7 @@
             nv.utils.windowResize(updateCharts);
 
             for (var i in sortTest.sorts) {
-                sorts.innerHTML += '<div class="sort-checkbox"><span>' + i + '</span><input sort-name="' + i + '" type="checkbox" checked></div>';
+                sorts.innerHTML += '<label class="sort-checkbox">' + i + '<input sort-name="' + i + '" type="checkbox" checked></label>';
             }
         },
         run: function(testParams) {

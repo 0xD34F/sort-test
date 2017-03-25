@@ -262,5 +262,3 @@ self.addEventListener('message', function(e) {
 
     post.result(null);
 });
-
-}
