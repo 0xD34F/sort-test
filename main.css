@@ -80,6 +80,20 @@ html {
     margin: 3px;
 }
 
+.sort-checkbox {
+    display: inline-block;
+    margin: 15px 10px 15px 5px;
+}
+.sort-checkbox > span {
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 4px;
+    height: 17px;
+}
+.sort-checkbox > input {
+    height: 17px;
+    width: 17px;
+}
 
 .overlay {
     width: 100%;

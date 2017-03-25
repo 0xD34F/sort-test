@@ -1,6 +1,4 @@
-﻿function sort_test_function() {
-
-function random(max, min) {
+﻿function random(max, min) {
     min = min || 0;
     return Math.floor(Math.random() * (max - min)) + min;
 }
@@ -265,8 +263,4 @@ self.addEventListener('message', function(e) {
     post.result(null);
 });
 
-} // sort_test_function
-
-if (window !== self) {
-    sort_test_function();
 }

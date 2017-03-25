@@ -1,7 +1,6 @@
 ﻿var sortTest = (function() {
     var currentTest = null;
 
-    //var worker = new Worker('sort-test-worker.js');
     var worker = new Worker(URL.createObjectURL(new Blob(["("+sort_test_function.toString()+")()"], {type: 'text/javascript'})));
 
     worker.addEventListener('message', function(e) {
@@ -13,7 +12,9 @@
         if (e.data.results) {
             addResult(e.data.results);
         } else if (e.data.results === null) {
-            document.dispatchEvent(new CustomEvent('sort-test-ended', {}));
+            document.dispatchEvent(new CustomEvent('sort-test-ended', {
+                id: currentTest
+            }));
             currentTest = null;
         } else if (e.data.error) {
             var errors = document.getElementById('errors');
@@ -22,16 +23,32 @@
         }
     });
 
-    function resetResultArrays() {
+    function resetResultArrays(sorts) {
         sortTest.rawResults = [];
 
-        for (t in sortTest.tests) {
-            for (var i = 0; i < sortTest.tests[t].chartData.length; i++) {
-                sortTest.tests[t].chartData[i].values = [];
+        for (var t in sortTest.tests) {
+            sortTest.tests[t].chartData = [];
+        }
+
+        for (var i = 0; i < sorts.length; i++) {
+            var sort = sorts[i];
+
+            for (t in sortTest.tests) {
+                var d = sortTest.tests[t].chartData;
+                d.push({
+                    key: sort,
+                    values: [],
+                    color: sortTest.sorts[sort].color
+                });
+                sortTest.sorts[sort].seriesNum = d.length - 1;
             }
         }
 
-        updateCharts();
+        for (var t in sortTest.tests) {
+            d3.select('#' + sortTest.tests[t].chartID + ' svg')
+                .datum(sortTest.tests[t].chartData)
+                .call(sortTest.tests[t].chart);
+        }
     }
 
     function addResult(data) {
@@ -54,7 +71,10 @@
 
     function updateCharts() {
         for (var t in sortTest.tests) {
-            sortTest.tests[t].chart.update();
+            var c = sortTest.tests[t].chart;
+            if (c) {
+                c.update();
+            }
         }
     }
 
@@ -82,7 +102,7 @@
         tests: {
             comparisons: {
                 title: 'Comparisons',
-                chartID: 'sortTestResultsCompares',
+                chartID: 'sortTestResultsComparisons',
                 unit: 'Comparisons'
             },
             swaps: {
@@ -104,15 +124,16 @@
     }\n\
 }',
         rawResults: [],
-        initCharts: function(chartsContainerID) {
-            var charts = document.getElementById(chartsContainerID);
+        init: function() {
+            var charts = document.getElementById('charts'),
+                sorts = document.getElementById('sorts');
 
             for (var t in sortTest.tests) {
                 var test = sortTest.tests[t];
 
                 charts.innerHTML += '<div class="chart-wrapper"><span class="chart-title">' + test.title + '</span><div class="chart" id="' + test.chartID + '"><svg></svg></div></div>';
 
-                var c = test.chart = nv.models.lineChart().margin({ left: 150 });
+                var c = test.chart = nv.models.lineChart().margin({ left: 150, right: 50 });
 
                 c.tooltip.headerFormatter(function(d) {
                     return d + ' elements';
@@ -137,27 +158,13 @@
             nv.utils.windowResize(updateCharts);
 
             for (var i in sortTest.sorts) {
-                for (t in sortTest.tests) {
-                    var d = sortTest.tests[t].chartData = sortTest.tests[t].chartData || [];
-                    d.push({
-                        key: i,
-                        values: [],
-                        color: sortTest.sorts[i].color
-                    });
-                    sortTest.sorts[i].seriesNum = d.length - 1;
-                }
-            }
-
-            for (var t in sortTest.tests) {
-                d3.select('#' + sortTest.tests[t].chartID + ' svg')
-                    .datum(sortTest.tests[t].chartData)
-                    .call(sortTest.tests[t].chart);
+                sorts.innerHTML += '<div class="sort-checkbox"><span>' + i + '</span><input sort-name="' + i + '" type="checkbox" checked></div>';
             }
         },
         run: function(testParams) {
             if (!currentTest) {
                 currentTest = +new Date();
-                resetResultArrays();
+                resetResultArrays(testParams.sort);
 
                 var test = {
                     id: currentTest,
@@ -217,11 +224,18 @@ function setCursorPos(input, start, end) {
 }
 
 window.onload = function() {
-    sortTest.initCharts('charts');
+    sortTest.init();
 
     document.getElementById('runTest').onclick = function() {
+        var sorts = [];
+        [].push.apply(sorts, document.querySelectorAll('#sorts input'));
+
         sortTest.run({
-            sort: Object.keys(sortTest.sorts),
+            sort: sorts.map(function(n) {
+                return n.checked ? n.getAttribute('sort-name') : null;
+            }).filter(function(n) {
+                return !!n;
+            }),
             elements: sortTest.testArraysSizes,
             fill: sortTest.testArraysFill
         });
