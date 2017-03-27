@@ -72,7 +72,7 @@
     function updateCharts() {
         for (var t in sortTest.tests) {
             var c = sortTest.tests[t].chart;
-            if (c) {
+            if (c && c.update) {
                 c.update();
             }
         }
