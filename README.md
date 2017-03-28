@@ -43,6 +43,7 @@ function(array) {
     }
 }
 ```
+Since the comparison of the elements of test arrays is performed through the subtraction, it is assumed that the test arrays will be filled with numbers.
 
 ## [Demo](https://0xd34f.github.io/sort-test/)
 
