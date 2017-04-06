@@ -1,9 +1,8 @@
 ﻿var sortTest = (function() {
-    var currentTest = null;
+    var currentTest = null,
+        worker = null;
 
-    var worker = new Worker('sort-test-worker.js');
-
-    worker.addEventListener('message', function(e) {
+    function onMessage(e) {
         // игнорируются результаты всех тестов, кроме текущего
         if (currentTest !== e.data.id) {
             return;
@@ -12,16 +11,13 @@
         if (e.data.results) {
             addResult(e.data.results);
         } else if (e.data.results === null) {
-            document.dispatchEvent(new CustomEvent('sort-test-ended', {
-                id: currentTest
-            }));
-            currentTest = null;
+            sortTest.stop();
         } else if (e.data.error) {
             var errors = document.getElementById('errors');
             errors.classList.remove('hidden');
             errors.innerHTML += (errors.innerHTML ? '<br>' : '') + e.data.error;
         }
-    });
+    }
 
     function resetResultArrays(sorts) {
         sortTest.rawResults = [];
@@ -161,8 +157,13 @@
                 sorts.innerHTML += '<label class="sort-checkbox"><input sort-name="' + i + '" type="checkbox" checked>' + i + '</label>';
             }
         },
-        run: function(testParams) {
+        isTesting: function() {
+            return !!currentTest;
+        },
+        start: function(testParams) {
             if (!currentTest) {
+                worker = new Worker('sort-test-worker.js');
+                worker.addEventListener('message', onMessage);
                 currentTest = +new Date();
                 resetResultArrays(testParams.sort);
 
@@ -173,6 +174,16 @@
 
                 worker.postMessage(test);
                 document.dispatchEvent(new CustomEvent('sort-test-started', test));
+            }
+        },
+        stop: function() {
+            if (currentTest) {
+                worker.terminate();
+                worker = null;
+                document.dispatchEvent(new CustomEvent('sort-test-ended', {
+                    id: currentTest
+                }));
+                currentTest = null;
             }
         }
     }
@@ -227,18 +238,22 @@ window.onload = function() {
     sortTest.init();
 
     document.getElementById('runTest').onclick = function() {
-        var sorts = [];
-        [].push.apply(sorts, document.querySelectorAll('#sorts input'));
+        if (sortTest.isTesting()) {
+            sortTest.stop();
+        } else {
+            var sorts = [];
+            [].push.apply(sorts, document.querySelectorAll('#sorts input'));
 
-        sortTest.run({
-            sort: sorts.map(function(n) {
-                return n.checked ? n.getAttribute('sort-name') : null;
-            }).filter(function(n) {
-                return !!n;
-            }),
-            elements: sortTest.testArraysSizes,
-            fill: sortTest.testArraysFill
-        });
+            sortTest.start({
+                sort: sorts.map(function(n) {
+                    return n.checked ? n.getAttribute('sort-name') : null;
+                }).filter(function(n) {
+                    return !!n;
+                }),
+                elements: sortTest.testArraysSizes,
+                fill: sortTest.testArraysFill
+            });
+        }
     };
 
     var openEditor = function(e) {
@@ -278,10 +293,10 @@ window.onload = function() {
         errors.classList.add('hidden');
         errors.innerHTML = '';
 
-        document.getElementById('runTest').setAttribute('disabled', 'disabled');
+        document.getElementById('runTest').innerHTML = 'Stop test';
     });
 
     document.addEventListener('sort-test-ended', function() {
-        document.getElementById('runTest').removeAttribute('disabled');
+        document.getElementById('runTest').innerHTML = 'Run test';
     });
 };

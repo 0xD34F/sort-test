@@ -64,6 +64,10 @@ html {
     padding: 30px 10px 10px 10px;
 }
 
+#runTest {
+    width: 70px;
+}
+
 #errors {
     padding: 10px 15px;
     margin-bottom: 20px;
