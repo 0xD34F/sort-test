@@ -173,7 +173,9 @@
                 };
 
                 worker.postMessage(test);
-                document.dispatchEvent(new CustomEvent('sort-test-started', test));
+                document.dispatchEvent(new CustomEvent('sort-test-started', {
+                    detail: test
+                }));
             }
         },
         stop: function() {
@@ -181,7 +183,9 @@
                 worker.terminate();
                 worker = null;
                 document.dispatchEvent(new CustomEvent('sort-test-ended', {
-                    id: currentTest
+                    detail: {
+                        id: currentTest
+                    }
                 }));
                 currentTest = null;
             }
