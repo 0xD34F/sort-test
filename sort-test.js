@@ -88,6 +88,9 @@
             comb: {
                 color: '#1fef2b'
             },
+            counting: {
+                color: '#f81cff'
+            },
             heap: {
                 color: '#f33c2e'
             },

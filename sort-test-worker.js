@@ -62,6 +62,21 @@ var sortTest = (function() {
 
             return array;
         },
+        counting: function(array) {
+            var count = [];
+            for (var i = 0; i < array.length; i++) {
+                count[array[i]] = (count[array[i]] || 0) + 1;
+            }
+
+            var index = 0;
+            for (i = 0; i < count.length; i++) {
+                while (count[i]--) {
+                    array[index++] = i;
+                }
+            }
+
+            return array;
+        },
         insertion: function(array) {
             for (var i = 1; i < array.length; i++) {
                 var x = array[i];

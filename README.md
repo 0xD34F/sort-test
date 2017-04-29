@@ -1,15 +1,18 @@
 # Comparison of sorting algorithms
 
+[https://0xd34f.github.io/sort-test/](https://0xd34f.github.io/sort-test/)
+
 Algorithms available for testing:
 
-| Algorithm        | Complexity (best)    | Complexity (worst)    |
-|------------------|----------------------|-----------------------|
-| bubble           | O(N)                 | O(N^2)                |
-| selection        | O(N^2)               | O(N^2)                |
-| insertion        | O(N)                 | O(N^2)                |
-| comb             | O(N log N)           | O(N^2)                |
-| quick            | O(N log N)           | O(N^2)                |
-| heap             | O(N log N)           | O(N log N)            |
+| Algorithm        | Complexity         |
+|------------------|--------------------|
+| bubble           | O(N^2)             |
+| selection        | O(N^2)             |
+| insertion        | O(N^2)             |
+| comb             | O(N log N)         |
+| counting         | O(N)               |
+| quick            | O(N log N)         |
+| heap             | O(N log N)         |
 
 Characteristics of algorithms available to comparison:
 * Number of comparisons
@@ -44,7 +47,3 @@ function(array) {
 }
 ```
 Since the comparison of the elements of test arrays is performed through the subtraction, it is assumed that the test arrays will be filled with numbers.
-
-## [Demo](https://0xd34f.github.io/sort-test/)
-
-[![Sort test](https://raw.githubusercontent.com/0xD34F/sort-test/master/sort-test-screenshot.png)](https://0xd34f.github.io/sort-test/)
