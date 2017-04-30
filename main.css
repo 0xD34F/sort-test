@@ -113,18 +113,19 @@ html {
 }
 .source > textarea {
     width: 100%;
-    height: calc(100% - 40px);
+    height: calc(100% - 50px);
     outline: 0;
     padding: 5px;
     box-sizing: border-box;
     resize: none;
     border: none;
+    border-bottom: 1px solid #ccc;
     font-family: monospace;
 }
 .source > button {
     float: right;
     height: 25px;
-    margin: 0 10px 10px 0;
+    margin: 10px 10px 10px 0;
 }
 
 .hidden {
