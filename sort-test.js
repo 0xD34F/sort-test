@@ -79,6 +79,9 @@
             bubble: {
                 color: '#0f5ac6'
             },
+            oddEven: {
+                color: '#ff960b'
+            },
             selection: {
                 color: '#e3d844'
             },
@@ -89,10 +92,10 @@
                 color: '#1fef2b'
             },
             counting: {
-                color: '#f81cff'
+                color: '#ff67eb'
             },
             heap: {
-                color: '#f33c2e'
+                color: '#ff0000'
             },
             quick: {
                 color: '#91bcd5'

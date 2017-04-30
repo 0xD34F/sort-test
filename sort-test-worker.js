@@ -38,6 +38,29 @@ var sortTest = (function() {
 
             return array;
         },
+        oddEven: function(array) {
+            var sorted = false;
+
+            while (!sorted) {
+                sorted = true;
+
+                for (var i = 1; i < array.length - 1; i += 2) {
+                    if (compare(array[i], array[i + 1]) > 0) {
+                        swap(array, i, i + 1);
+                        sorted = false;
+                    }
+                }
+
+                for (i = 0; i < array.length - 1; i += 2) {
+                    if (compare(array[i], array[i + 1]) > 0) {
+                        swap(array, i, i + 1);
+                        sorted = false;
+                    }
+                }
+            }
+
+            return array;
+        },
         comb: function(array) {
             var gap = array.length,
                 shrink = 1.3,

@@ -4,15 +4,14 @@
 
 Algorithms available for testing:
 
-| Algorithm        | Complexity         |
-|------------------|--------------------|
-| bubble           | O(N^2)             |
-| selection        | O(N^2)             |
-| insertion        | O(N^2)             |
-| comb             | O(N log N)         |
-| counting         | O(N)               |
-| quick            | O(N log N)         |
-| heap             | O(N log N)         |
+* bubble
+* odd-even
+* selection
+* insertion
+* comb
+* counting
+* quick
+* heap
 
 Characteristics of algorithms available to comparison:
 * Number of comparisons
