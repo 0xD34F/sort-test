@@ -61,6 +61,26 @@ var sortTest = (function() {
 
             return array;
         },
+        gnome: function(array) {
+            var i = 1,
+                j = 2;
+
+            while (i < array.length) {
+                if (compare(array[i - 1], array[i]) < 0) {
+                    i = j;
+                    j++;
+                } else {
+                    swap(array, i - 1, i);
+                    i--;
+                    if (i === 0) {
+                        i = j;
+                        j++;
+                    }
+                }
+            }
+
+            return array;
+        },
         comb: function(array) {
             var gap = array.length,
                 shrink = 1.3,

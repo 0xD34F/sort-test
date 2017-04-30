@@ -3,9 +3,9 @@
 [https://0xd34f.github.io/sort-test/](https://0xd34f.github.io/sort-test/)
 
 Algorithms available for testing:
-
 * bubble
 * odd-even
+* gnome
 * selection
 * insertion
 * comb

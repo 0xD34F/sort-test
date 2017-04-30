@@ -82,6 +82,9 @@
             oddEven: {
                 color: '#ff960b'
             },
+            gnome: {
+                color: '#029311'
+            },
             selection: {
                 color: '#e3d844'
             },
