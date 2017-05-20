@@ -57,11 +57,11 @@ html {
 
 .content > .title {
     font-size: 32px;
-    padding: 30px 0 0 10px;
+    padding: 10px 0 0 10px;
 }
 
 #menu {
-    padding: 30px 10px 10px 10px;
+    padding: 10px;
 }
 
 #runTest {
@@ -142,6 +142,7 @@ html {
     position: relative;
     left: 5px;
     top: -5px;
+    font-weight: bold;
 }
 
 .chart {
