@@ -1,33 +1,11 @@
 <!DOCTYPE html>
-<html>
-<head>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
     <title>Sorting algorithms test</title>
-    <meta name="description" content="Sorting algorithms test">
-
-    <link rel="stylesheet" type="text/css" media="screen" href="main.css">
-    <link rel="stylesheet" type="text/css" media="screen" href="nvd3/nv.d3.min.css">
-
-    <script src="d3/d3.min.js"></script>
-    <script src="nvd3/nv.d3.min.js"></script>
-    <script src="sort-test.js"></script>
-</head>
-<body>
-    <div class="content">
-        <div class="title">Sorting algorithms test</div>
-        <div id="menu">
-            <button class="button" id="runTest">Run test</button>
-            <button class="button" id="testArraysSizes" propName="testArraysSizes">Test arrays sizes...</button>
-            <button class="button" id="testArraysFill" propName="testArraysFill">Test arrays fill...</button>
-            <div id="sorts"></div>
-        </div>
-        <div id="errors" class="hidden"></div>
-        <div id="charts"></div>
-    </div>
-    <div class="overlay hidden"></div>
-    <div class="source hidden">
-        <textarea id="testArraysEditor"></textarea>
-        <button class="button" id="BCancel">Cancel</button>
-        <button class="button" id="BOK">OK</button>
-    </div>
-</body>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="dist/build.js"></script>
+  </body>
 </html>
