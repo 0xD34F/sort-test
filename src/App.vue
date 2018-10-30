@@ -43,14 +43,24 @@
         @click="openDialog(option)"
         color="primary"
       ) {{ option.title }}...
+      v-btn(
+        :disabled="testing || !isResults"
+        @click="clearResults"
+        color="primary"
+      ) Clear results
 
     v-content
       test-results(
         :tests="tests"
+        :isResults="isResults"
         ref="results"
       )
 
-    v-footer(app height="50")
+    v-footer(
+      app
+      height="50"
+      v-if="!!message.type || testing"
+    )
       v-alert(
         :value="!!message.type"
         :type="message.type"
@@ -139,7 +149,7 @@ export default {
           title: 'Run time',
           unit: 'Milliseconds',
         },
-      ].map(n => ({ ...n, chartData: {} })),
+      ].map(n => ({ ...n, chartData: { datasets: [] } })),
       activeOption: null,
       testOptions: [ 
         {
@@ -166,6 +176,10 @@ export default {
     },
     testing() {
       return !!this.worker;
+    },
+    isResults() {
+      const d = this.tests[0].chartData.datasets[0];
+      return !!(d && d.data && d.data.length);
     },
   },
   methods: {
@@ -210,6 +224,10 @@ export default {
           text: e.data.error,
         });
       }
+    },
+    clearResults() {
+      this.message = {};
+      this.updateTestResults(test => test.chartData.datasets = []);
     },
     resetResults() {
       this.updateTestResults(test => {
