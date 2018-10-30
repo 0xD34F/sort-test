@@ -1,6 +1,6 @@
 <template lang="pug">
   v-app(id="app")
-    v-toolbar
+    v-toolbar(app)
       v-btn(
         v-show="!testing"
         @click="start"
@@ -15,8 +15,12 @@
         color="primary"
       )
         v-icon stop
-      v-menu(offset-y)
+      v-menu(
+        :disabled="testing"
+        offset-y
+      )
         v-btn(
+          :disabled="testing"
           slot="activator"
           color="primary"
         )
@@ -35,17 +39,18 @@
       v-btn(
         v-for="option in testOptions"
         :key="option.name"
+        :disabled="testing"
         @click="openDialog(option)"
         color="primary"
       ) {{ option.title }}...
 
-    test-option-dialog(
-      v-bind="activeOption"
-      :show="!!activeOption"
-      @close="closeDialog"
-    )
+    v-content
+      test-results(
+        :tests="tests"
+        ref="results"
+      )
 
-    div(class="info-panel")
+    v-footer(app height="50")
       v-alert(
         :value="!!message.type"
         :type="message.type"
@@ -55,9 +60,10 @@
         :indeterminate="true"
       )
 
-    test-results(
-      :tests="tests"
-      ref="results"
+    test-option-dialog(
+      v-bind="activeOption"
+      :show="!!activeOption"
+      @close="closeDialog"
     )
 </template>
 
@@ -65,8 +71,6 @@
 import TestOptionDialog from './components/TestOptionDialog';
 import TestResults from './components/TestResults';
 import Worker from './worker/sort-test.worker.js';
-
-let currentTestID = 0;
 
 export default {
   name: 'App',
@@ -77,7 +81,6 @@ export default {
   data() {
     return {
       worker: null,
-      currentTest: null,
       message: {
         type: null,
         text: '',
@@ -124,19 +127,16 @@ export default {
         {
           name: 'comparisons',
           title: 'Comparisons',
-          chartID: 'sortTestResultsComparisons',
           unit: 'Comparisons',
         },
         {
           name: 'swaps',
           title: 'Swaps',
-          chartID: 'sortTestResultsSwaps',
           unit: 'Swaps',
         },
         {
           name: 'time',
           title: 'Run time',
-          chartID: 'sortTestResultsTime',
           unit: 'Milliseconds',
         },
       ].map(n => ({ ...n, chartData: {} })),
@@ -165,7 +165,7 @@ export default {
       return this.sorts.filter(n => n.isTested);
     },
     testing() {
-      return !!this.currentTest;
+      return !!this.worker;
     },
   },
   methods: {
@@ -181,15 +181,11 @@ export default {
         this.worker = new Worker();
         this.worker.addEventListener('message', this.onMessage.bind(this));
         this.message = {};
-        this.currentTest = ++currentTestID;
-        this.resetResultArrays();
+        this.resetResults();
 
         this.worker.postMessage({
-          id: this.currentTest,
-          params: {
-            sorts: this.testSorts.map(n => n.name),
-            ...this.testOptions.reduce((acc, n) => ({ ...acc, [n.name]: n.value }), {}),
-          },
+          sorts: this.testSorts.map(n => n.name),
+          ...this.testOptions.reduce((acc, n) => ({ ...acc, [n.name]: n.value }), {}),
         });
       }
     },
@@ -197,16 +193,10 @@ export default {
       if (this.testing) {
         this.worker.terminate();
         this.worker = null;
-        this.currentTest = null;
         this.message = message;
       }
     },
     onMessage(e) {
-      // игнорируются результаты всех тестов, кроме текущего
-      if (this.currentTest !== e.data.id) {
-        return;
-      }
-
       if (e.data.results) {
         this.addResult(e.data.results);
       } else if (e.data.results === null) {
@@ -221,8 +211,8 @@ export default {
         });
       }
     },
-    resetResultArrays() {
-      this.tests.forEach(test => {
+    resetResults() {
+      this.updateTestResults(test => {
         test.chartData.datasets = this.testSorts.map(sort => ({
           data: [],
           label: sort.name,
@@ -232,20 +222,17 @@ export default {
           backgroundColor: sort.color,
         }));
       });
-
-      this.updateCharts();
     },
     addResult(data) {
-      this.tests.forEach(test => {
+      this.updateTestResults(test => {
         test.chartData.datasets.find(n => n.label === data.sort).data.push({
           x: data.elements,
           y: data[test.name],
         });
       });
-
-      this.updateCharts();
     },
-    updateCharts() {
+    updateTestResults(callback) {
+      this.tests.forEach(callback);
       this.$refs.results.updateCharts();
     },
   },
@@ -260,13 +247,7 @@ export default {
   margin-left: 6px;
 }
 
-.info-panel {
-  display: flex;
-  height: 60px;
-  align-items: center;
-}
-
-.info-panel .v-alert {
+.v-footer .v-alert {
   width: 100%;
 }
 </style>

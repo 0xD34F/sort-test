@@ -11,26 +11,13 @@
       .headline(slot="header") {{ test.title }}
       test-results-chart(
         :chartData="test.chartData"
-        :options="getChartOptions(test)"
+        :yAxisUnit="test.unit"
         ref="charts"
       )
 </template>
 
 <script>
-import { Line, mixins } from 'vue-chartjs';
-
-const TestResultsChart = {
-  name: 'TestResultsChart',
-  extends: Line,
-  mixins: [ mixins.reactiveProp ],
-  props: {
-    chartData: Object,
-    options: Object,
-  },
-  mounted() {
-    this.renderChart(this.chartData, this.options);
-  },
-};
+import TestResultsChart from './TestResultsChart';
 
 export default {
   name: 'TestResults',
@@ -46,39 +33,6 @@ export default {
     };
   },
   methods: {
-    getChartOptions(test) {
-      return {
-        maintainAspectRatio: false,
-        scales: {
-          xAxes: [
-            {
-              type: 'linear',
-              ticks: {
-                suggestedMin: 0,
-              },
-            },
-          ],
-          yAxes: [
-            {
-              ticks: {
-                suggestedMin: 0,
-              },
-              scaleLabel: {
-                labelString: test.unit,
-                display: true,
-              },
-            },
-          ],
-        },
-        tooltips: {
-          mode: 'point',
-          callbacks: {
-            title: tooltipItem => `${tooltipItem[0].xLabel} elements`,
-            label: tooltipItem => `${tooltipItem.yLabel} ${test.unit.toLowerCase()}`,
-          },
-        },
-      };
-    },
     updateCharts() {
       this.$refs.charts.forEach(n => n._data._chart.update());
     },

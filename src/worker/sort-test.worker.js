@@ -1,4 +1,4 @@
-﻿const context = require.context('./algorithms', false, /.js$/);
+﻿const context = require.context('./algorithms', false, /\.js$/);
 const algorithms = context.keys().reduce((algorithms, key) => ({
   ...algorithms,
   [key.match(/\w+/).pop()]: context(key).default,
@@ -47,16 +47,13 @@ const sortTest = {
 
 
 const post = {
-  testID: null,
   result(data) {
     self.postMessage({
-      id: post.testID,
       results: data,
     });
   },
   error(data) {
     self.postMessage({
-      id: post.testID,
       error: data,
     });
   },
@@ -64,9 +61,7 @@ const post = {
 
 
 self.addEventListener('message', function(e) {
-  post.testID = e.data.id;
-
-  const testParams = e.data.params;
+  const testParams = e.data;
 
   let elements = null;
   try {
