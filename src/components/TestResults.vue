@@ -10,10 +10,12 @@
     )
       .headline(slot="header") {{ test.title }}
       test-results-chart(
+        v-show="isResults"
         :chartData="test.chartData"
         :yAxisUnit="test.unit"
         ref="charts"
       )
+      .no-data(v-show="!isResults") NO DATA
 </template>
 
 <script>
@@ -26,6 +28,7 @@ export default {
   },
   props: {
     tests: Array,
+    isResults: Boolean,
   },
   data() {
     return {
@@ -46,5 +49,20 @@ export default {
 <style scoped>
 .v-expansion-panel__body > div {
   height: 80vh;
+}
+
+/deep/ .v-expansion-panel__header {
+  background-color: #eee;
+  border-bottom: 1px solid #ddd;
+}
+
+.no-data {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: monospace;
+  font-size: 64px;
 }
 </style>
