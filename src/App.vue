@@ -15,8 +15,12 @@
         color="primary"
       )
         v-icon stop
-      v-menu(offset-y)
+      v-menu(
+        :disabled="testing"
+        offset-y
+      )
         v-btn(
+          :disabled="testing"
           slot="activator"
           color="primary"
         )
@@ -35,6 +39,7 @@
       v-btn(
         v-for="option in testOptions"
         :key="option.name"
+        :disabled="testing"
         @click="openDialog(option)"
         color="primary"
       ) {{ option.title }}...
