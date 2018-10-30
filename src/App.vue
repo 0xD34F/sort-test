@@ -1,6 +1,6 @@
 <template lang="pug">
   v-app(id="app")
-    v-toolbar
+    v-toolbar(app)
       v-btn(
         v-show="!testing"
         @click="start"
@@ -44,13 +44,13 @@
         color="primary"
       ) {{ option.title }}...
 
-    test-option-dialog(
-      v-bind="activeOption"
-      :show="!!activeOption"
-      @close="closeDialog"
-    )
+    v-content
+      test-results(
+        :tests="tests"
+        ref="results"
+      )
 
-    .info-panel
+    v-footer(app height="50")
       v-alert(
         :value="!!message.type"
         :type="message.type"
@@ -60,9 +60,10 @@
         :indeterminate="true"
       )
 
-    test-results(
-      :tests="tests"
-      ref="results"
+    test-option-dialog(
+      v-bind="activeOption"
+      :show="!!activeOption"
+      @close="closeDialog"
     )
 </template>
 
@@ -246,13 +247,7 @@ export default {
   margin-left: 6px;
 }
 
-.info-panel {
-  display: flex;
-  height: 60px;
-  align-items: center;
-}
-
-.info-panel .v-alert {
+.v-footer .v-alert {
   width: 100%;
 }
 </style>
