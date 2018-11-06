@@ -74,6 +74,7 @@
       v-bind="activeOption"
       :show="!!activeOption"
       @close="closeDialog"
+      @option-changed="onOptionChanged"
     )
 </template>
 
@@ -186,9 +187,11 @@ export default {
     openDialog(option) {
       this.activeOption = option;
     },
-    closeDialog($event) {
-      this.activeOption.value = $event;
+    closeDialog() {
       this.activeOption = null;
+    },
+    onOptionChanged(value) {
+      this.activeOption.value = value;
     },
     start() {
       if (!this.testing) {

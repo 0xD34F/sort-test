@@ -1,7 +1,6 @@
 <template lang="pug">
   v-dialog(
     v-model="opened"
-    persistent
     width="80%"
   )
     v-card
@@ -61,7 +60,10 @@ export default {
   },
   methods: {
     close(saveChanges) {
-      this.text = saveChanges ? this.text : this.value;
+      if (saveChanges) {
+        this.$emit('option-changed', this.text);
+      }
+
       this.opened = false;
     },
   },
