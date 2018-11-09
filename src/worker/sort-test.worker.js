@@ -5,9 +5,6 @@ const algorithms = context.keys().reduce((algorithms, key) => ({
 }), {});
 
 
-const random = (max, min = 0) => Math.floor(Math.random() * (max - min)) + min;
-
-
 const sortTest = {
   algorithms,
   stats: {},
